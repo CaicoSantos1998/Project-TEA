@@ -27,7 +27,14 @@ async function testConnection() {
 testConnection();
 
 st.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/html', 'index.html'));
+    const indexPath = path.join(__dirname, '..', 'public', 'html', 'index.html');  // Ajuste aqui
+    console.log('Caminho para o index.html:', indexPath);  // Isso ajuda na depuração
+    res.sendFile(indexPath, (err) => {
+        if (err) {
+            console.error('Erro ao enviar o arquivo:', err);
+            res.status(500).send('Erro ao servir o arquivo');
+        }
+    });
 });
 
 st.post('/form', async (req, res) => {
