@@ -11,7 +11,7 @@ const db = mysql.createPool({
 	uri: 'mysql://root:BiSViYxCHnnPUidqCYDyvXpCzMaMjuff@shuttle.proxy.rlwy.net:35093/railway'
 });
 
-st.use(express.static(path.join(__dirname, 'public/html')));
+st.use(express.static(path.join(__dirname, 'public')));
 
 async function testConnection() {
 	try {
@@ -27,7 +27,7 @@ async function testConnection() {
 testConnection();
 
 st.get('/', (req, res) => {
-    res.send('Servidor funcionando!');
+    res.send(path.join(__dirname, 'public/html/index.html'));
 });
 
 st.post('/form', async (req, res) => {
