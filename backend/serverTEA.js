@@ -27,15 +27,15 @@ async function testConnection() {
 testConnection();
 
 st.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'index.html'));
 });
 
 st.get('/consultar-dados', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'html', 'consultar-dados.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'consultar-dados.html'));
 });
 
 st.get('/sobre-projeto', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'html', 'sobre-projeto.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'sobre-projeto.html'));
 });
 
 st.post('/form', async (req, res) => {
