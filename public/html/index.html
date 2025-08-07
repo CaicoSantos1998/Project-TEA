@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEA</title>
+    
+
+    <link rel="stylesheet" href="../css/style.css">
+    
+</head>
+<body>
+
+    <div id="header">
+
+        <div id="title">
+            <h1>TEA - Tem Esgoto Aí?</h1>
+        </div>
+
+        <div id="menu">
+            <a href="index.html">Formulario</a>
+            <a href="consultar-dados.html">Consulta</a>
+            <a href="sobre-projeto.html">Sobre</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <form id="formPessoas">
+
+            <div class="field-name">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome"> 
+            </div>
+
+            <div class="field">
+                <label>Sexo:</label>
+                <label><input type="radio" name="sexo" value="masculino" onclick="verificarOutros()"> Masculino</label>
+                <label><input type="radio" name="sexo" value="feminino" onclick="verificarOutros()"> Feminino</label>
+                <label>
+                    <input type="radio" name="sexo" value="outroSexo" onclick="verificarOutros()"> Outro
+                    <input type="text" id="outroSexos" disabled placeholder="Especifique">
+                </label>
+            </div>
+
+            <div class="field" id="campo-outros" style="display: none;">
+                <label for="descricao-outros">Como você se identifica?</label>
+                <input type="text" name="descricao-outros" id="descricao-outros" disabled>
+            </div>
+
+            <div class="field">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+            </div>
+
+            <div class="field">
+                <label for="telefone">Telefone:</label>
+                <input type="tel" name="telefone" id="field-telefone" placeholder="(xx) 9xxxx-xxxx">
+            </div>
+
+            <div class="field">
+                <label for="bairro">Bairro:</label>
+                <input type="text" name="bairro">
+            </div>
+            
+            <div class="field">
+                <label for="rua">Rua:</label>
+                <input type="text" name="rua">
+            </div>
+            
+            <div class="field">
+                <label for="NI">Número do Imóvel:</label>
+                <input type="text" name="numeroImovel" id="nbI">
+            </div>
+            
+            <div class="field">
+                <label for="complemento">Complemento:</label>
+                <input type="text" name="complemento"> 
+            </div>
+
+            <div class="field">
+                <label for="distrito">Distrito:</label>
+                <select name="distrito">
+                    <option value="" selected disabled>...</option>
+                    <option value="Nagé">Nagé</option>
+                </select>
+            </div>
+            
+            <div class="field">
+                <label for="cidade">Cidade:</label>
+                <select name="cidade">
+                    <option value="" selected disabled>...</option>
+                    <option value="Maragogipe">Maragogipe</option>
+                </select>
+            </div>
+            
+            <div class="field">
+                <label for="estado">Estado:</label>
+                <select name="estado">
+                    <option value="" selected disabled>...</option>
+                    <option value="BA">BA</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="temEsgotoAi">Tem esgoto na sua casa:</label>
+                <label>SIM <input type="radio" id="simTemEsgoto" value="Sim" name="temEsgotoAi" onchange="verificarEsgoto()"></label> 
+                <label>NAO <input type="radio" id="naoTemEsgoto" value="Nao" name="temEsgotoAi" onchange="verificarEsgoto()"></label> 
+            </div>
+
+            <div class="field">
+                <label for="opcoes">Onde é jogado:</label>
+                <select id="opcoes" name="ondeEJogado">
+                    <option value="" selected disabled>...</option>
+                    <option value="No MAR">No Mar</option>
+                    <option value="Ceu aberto">Céu aberto</option>
+                    <option value="No mangue">No mangue</option>
+                    <option value="No Sistema de esgoto">No sistema de esgoto</option>
+                </select>
+            </div>
+            <button id="btn-enviar" type="submit">Enviar</button>
+        </form>
+
+    </div>
+    
+    <footer>
+        <h1>Todos os direitos reservados - 2025</h1>
+    </footer>
+    
+    <script src="../js/index.js"></script>
+</body>
+</html>

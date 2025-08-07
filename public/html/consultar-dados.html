@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>consultar-dados</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div id="header">
+        <div id="title">
+            <h1>TEA - Tem Esgoto Aí?</h1>
+        </div>
+
+        <div id="menu">
+            <a class="page1" href="index.html">Formulario</a>
+            <a class="page2" href="consultar-dados.html">Consulta</a>
+            <a class="page3" href="sobre-projeto.html">Sobre</a>
+        </div>
+    </div>
+
+    <div class="container-consulta">
+
+        <section id="consulta">
+            <label for="filtro">Escolha o filtro:</label>
+            <select id="filtro">
+                <option value="todos">Todos</option>
+                <option value="bairro">Bairro</option>
+                <option value="rua">Rua</option>
+            </select>
+        
+            <button id="mostrarGraficoButton">Mostrar Grafico</button>
+            <button id="showDetail">Mostrar Detalhes</button>
+
+            <canvas id="myChart" width="50%" height="50%"></canvas>
+        </section>
+
+        <div id="screen-login" style="display: none;">
+            <h3>Login necessário</h3>
+            <input type="text" id="user" placeholder="Usuário">
+            <input type="password" id="password" placeholder="Senha">
+            <button id="btt-login">Entrar</button>
+            <p id="msg-error" style="color: red;"></p>
+        </div>
+
+        <div id="detail" style="display: none;">
+            <div id="dataProtected">
+                <h3>Dados mais detalhados</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <h1>Todos os direitos reservados - 2025</h1>
+    </footer>
+
+    <script src="../js/index.js"></script>
+    
+</body>
+</html>
