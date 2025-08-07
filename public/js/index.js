@@ -6,11 +6,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataProtectedSection = document.getElementById('dataProtected');
     const canvas = document.getElementById('myChart');
     const dadosDetalhadosTitle = document.getElementById('dadosDetalhadosTitle');
-    
+    const form = document.getElementById('formPessoas'); 
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const dados = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('https://project-tea.onrender.com/form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dados),
+                });
+
+                const data = await response.json();
+
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Erro: ' + data.error);
+                }
+
+            } catch (error) {
+                console.error('Erro ao enviar dados:', error);
+                alert('Erro ao enviar dados. Tente novamente mais tarde.');
+            }
+        });
+    }
+
     screenLogin.style.display = 'none';
     detailSection.style.display = 'none';
     dataProtectedSection.style.display = 'none';
     canvas.style.display = 'none';
+
     if (dadosDetalhadosTitle) dadosDetalhadosTitle.style.display = 'none';
 
     function toggleSections(showGraphic) {
@@ -44,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!canvas) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/percentage?filter=${encodeURIComponent(filter)}`);
+            const response = await fetch(`https://project-tea.onrender.com/percentage?filter=${encodeURIComponent(filter)}`);
             const data = await response.json();
             let labels = [];
             let datasets = [];
@@ -167,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadProtectedData() {
         try {
             console.log('Carregando dados protegidos...');
-            const res = await fetch('http://localhost:3000/dataProtected');  // Inclua a porta 3000
+            const res = await fetch('https://project-tea.onrender.com/dataProtected');  // Inclua a porta 3000
 
             if (!res.ok) {
                 console.error('Erro na resposta da API:', res.status, res.statusText);

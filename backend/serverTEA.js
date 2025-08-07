@@ -94,6 +94,7 @@ st.get('/sobre-projeto', (req, res) => {
 
 st.post('/form', async (req, res) => {
     console.log('Recebido:', req.body);
+
     const {
         nome, sexo, email, telefone, bairro, rua,
         numeroImovel, complemento, distrito, cidade,
@@ -104,15 +105,21 @@ st.post('/form', async (req, res) => {
         return res.status(400).json({ error: 'Nome é obrigatório' });
     }
 
+    console.log(`Dados recebidos para inserção: ${nome}, ${sexo}, ${email}, ${telefone}, ${bairro}, ${rua}, ${numeroImovel}, ${complemento}, ${distrito}, ${cidade}, ${estado}, ${temEsgotoAi}, ${ondeEJogado}`)
+
     const conn = await db.getConnection();
     try {
         await conn.beginTransaction();
 
+        console.log('Verificando estado...')
         const [est] = await conn.execute(
             'SELECT id FROM estado WHERE sigla = ? LIMIT 1', [estado]
         );
+
         const idEstado = est.length ? est[0].id :
             (await conn.execute('INSERT INTO estado (sigla) VALUES (?)', [estado]))[0].insertId;
+
+        console.log('Estado identificado ou inserido:',idEstado);
 
         const [cid] = await conn.execute(
             'SELECT id FROM cidade WHERE nome = ? AND idEstado = ? LIMIT 1',
@@ -121,12 +128,16 @@ st.post('/form', async (req, res) => {
         const idCidade = cid.length ? cid[0].id :
             (await conn.execute('INSERT INTO cidade (nome, idEstado) VALUES (?, ?)', [cidade, idEstado]))[0].insertId;
 
+        console.log('Cidade identificada ou inserida:', idCidade);
+
         const [dist] = await conn.execute(
             'SELECT id FROM distrito WHERE nome = ? AND idCidade = ? LIMIT 1',
             [distrito, idCidade]
         );
         const idDistrito = dist.length ? dist[0].id :
             (await conn.execute('INSERT INTO distrito (nome, idCidade) VALUES (?, ?)', [distrito, idCidade]))[0].insertId;
+
+        console.log('Distrito identificado ou inserido:', idDistrito);
 
         await conn.execute(
             `INSERT INTO pessoa
@@ -135,11 +146,13 @@ st.post('/form', async (req, res) => {
             [nome, sexo, email, telefone, bairro, rua, numeroImovel, complemento, temEsgotoAi, ondeEJogado, idDistrito]
         );
 
+        console.log('Dados inseridos com sucesso!')
+
         await conn.commit();
         res.status(201).json({ message: 'Dados enviados com sucesso!' });
     } catch (error) {
         await conn.rollback();
-        console.error(error);
+        console.error('Erro ao inserir dados', error.message);
         res.status(500).json({ error: 'Erro interno!' });
     } finally {
         conn.release();
