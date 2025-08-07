@@ -27,7 +27,7 @@ async function testConnection() {
 testConnection();
 
 st.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'public/html/index.html'));
+    res.sendFile(path.join(__dirname, 'public/html', 'index.html'));
 });
 
 st.post('/form', async (req, res) => {
