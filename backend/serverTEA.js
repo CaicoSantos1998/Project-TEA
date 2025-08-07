@@ -11,7 +11,7 @@ const db = mysql.createPool({
 	uri: 'mysql://root:BiSViYxCHnnPUidqCYDyvXpCzMaMjuff@shuttle.proxy.rlwy.net:35093/railway'
 });
 
-st.use(express.static(path.join(__dirname, 'public')));
+st.use(express.static(path.join(__dirname, '..', 'public')));
 
 async function testConnection() {
 	try {
