@@ -70,6 +70,7 @@ st.use(express.static(path.join(__dirname, '..', 'public')));
 async function testConnection() {
 	try {
 		const conn = await db.getConnection();
+        const [rows] = await conn.query('SELECT 1')
 		console.log('Conexão com o banco funcionando!');
 		conn.release();
 	} catch (error) {
@@ -151,9 +152,9 @@ st.post('/form', async (req, res) => {
         await conn.commit();
         res.status(201).json({ message: 'Dados enviados com sucesso!' });
     } catch (error) {
+        console.error("Erro no servidr:", error);
         await conn.rollback();
-        console.error('Erro ao inserir dados', error.message);
-        res.status(500).json({ error: 'Erro interno!' });
+        res.status(500).json({ error: `Erro interno: ${error.message}`});
     } finally {
         conn.release();
     }
