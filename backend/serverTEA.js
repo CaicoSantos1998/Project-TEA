@@ -8,12 +8,7 @@ st.use(cors());
 st.use(express.json());
 
 const db = mysql.createPool({
-	host: '127.0.0.1',
-	user: 'root',
-	password: '052547Santos..',
-	database: 'TEA',
-	waitForConnections: true,
-	connectionLimit: 10
+	uri:'mysql://root:BiSViYxCHnnPUidqCYDyvXpCzMaMjuff@shuttle.proxy.rlwy.net:35093/railway'
 });
 
 st.use(express.static(path.join(__dirname, 'public')));
