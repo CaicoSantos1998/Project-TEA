@@ -11,6 +11,53 @@ const db = mysql.createPool({
 	uri: 'mysql://root:rNpyYjhhRoadYPHZXttDfVLaGcGlEfTm@gondola.proxy.rlwy.net:42035/railway'
 });
 
+async function createTables() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS estado (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      sigla VARCHAR(2) NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS cidade (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nome VARCHAR(255) NOT NULL,
+      idEstado INT,
+      FOREIGN KEY (idEstado) REFERENCES estado(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS distrito (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nome VARCHAR(255) NOT NULL,
+      idCidade INT,
+      FOREIGN KEY (idCidade) REFERENCES cidade(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS pessoa (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nome VARCHAR(255) NOT NULL,
+      sexo VARCHAR(10),
+      email VARCHAR(255),
+      telefone VARCHAR(20),
+      bairro VARCHAR(255),
+      rua VARCHAR(255),
+      numeroImovel VARCHAR(20),
+      complemento VARCHAR(255),
+      temEsgotoAi BOOLEAN,
+      ondeEJogado TEXT,
+      idDistrito INT,
+      FOREIGN KEY (idDistrito) REFERENCES distrito(id)
+    );
+  `;
+  try {
+    const conn = await db.getConnection();
+    await conn.query(query);
+    console.log('Tabelas criadas com sucesso!');
+    conn.release();
+  } catch (error) {
+    console.error('Erro ao criar as tabelas:', error.message);
+  }
+};
+
 st.use(express.static(path.join(__dirname, '..', 'public')));
 
 async function testConnection() {
@@ -25,6 +72,7 @@ async function testConnection() {
 }
 
 testConnection();
+createTables();
 
 st.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'html', 'index.html'));
