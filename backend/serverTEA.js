@@ -10,7 +10,11 @@ st.use(cors());
 st.use(session({
     secret: 'key-secret-safe',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        secure: true,
+        sameSite: 'lax'
+    }
 }));
 st.use(express.json());
 
