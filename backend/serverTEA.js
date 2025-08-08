@@ -256,7 +256,7 @@ st.post('/login', (req, res) => {
 
     if (valid) {
         req.session.autentic = true;
-        req.session.usuario = username;
+        req.session.user = username;
         res.json({ success: true });
     } else {
         res.json({ success: false });
