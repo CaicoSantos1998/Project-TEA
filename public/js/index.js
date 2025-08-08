@@ -200,19 +200,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await res.json();
 
         if (data.success) {
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('detail').style.display = 'block';
-            loadProtectedData();
-            checkLogin();
+            document.getElementById('msg-error').textContent = '';
+            document.getElementById('btt-download').style.display = 'block';
         } else {
             document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
         }
     });
 
+    document.getElementById('btt-download').addEventListener('click', async () => {
+        const res = await fetch('https://project-tea.onrender.com/document.PDF')
+    })
+
     async function loadProtectedData() {
         try {
             console.log('Carregando dados protegidos...');
-            const res = await fetch('https://project-tea.onrender.com/dataProtected');  // Inclua a porta 3000
+            const res = await fetch('https://project-tea.onrender.com/dataProtected');
 
             if (!res.ok) {
                 console.error('Erro na resposta da API:', res.status, res.statusText);
