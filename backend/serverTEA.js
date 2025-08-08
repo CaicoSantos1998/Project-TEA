@@ -53,20 +53,20 @@ async function createTables() {
 
     await conn.query(`
       CREATE TABLE IF NOT EXISTS pessoa (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(255) NOT NULL,
-        sexo VARCHAR(10),
-        email VARCHAR(255),
-        telefone VARCHAR(20),
-        bairro VARCHAR(255),
-        rua VARCHAR(255),
-        numeroImovel VARCHAR(20),
-        complemento VARCHAR(255),
-        temEsgotoAi BOOLEAN,
-        ondeEJogado TEXT,
-        idDistrito INT,
-        FOREIGN KEY (idDistrito) REFERENCES distrito(id)
-      );
+        id int primary key auto_increment,
+        nome varchar(130) not null,
+        sexo varchar(20),
+        email varchar(50) null,
+        telefone varchar(11),
+        bairro varchar(150),
+        rua varchar(150),
+        numeroImovel char(5),
+        complemento varchar(30) null,
+        temEsgotoAi varchar(5),
+        ondeEJogado varchar(20),
+        idDistrito int,
+        constraint foreign key fkIdDistrito(idDistrito) references distrito(id)
+        );
     `);
 
     console.log('Tabelas criadas com sucesso!');
