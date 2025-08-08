@@ -188,33 +188,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = document.getElementById('user').value;
         const password = document.getElementById('password').value;
 
-        const res = await fetch('https://project-tea.onrender.com/login', {
+        const res = await fetch('/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ username: user, password })
+            body: JSON.stringify({ user, password })
         });
 
         const data = await res.json();
 
-        if (data.success) {
-            document.getElementById('msg-error').textContent = '';
-            document.getElementById('btt-download').style.display = 'block';
+        if (data.sucess) {
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('detail').style.display = 'block';
+            loadProtectedData();
+            checkLogin();
         } else {
             document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
         }
     });
 
-    document.getElementById('btt-download').addEventListener('click', async () => {
-        const res = await fetch('https://project-tea.onrender.com/document.PDF')
-    })
-
     async function loadProtectedData() {
         try {
             console.log('Carregando dados protegidos...');
-            const res = await fetch('https://project-tea.onrender.com/dataProtected');
+            const res = await fetch('https://project-tea.onrender.com/dataProtected');  // Inclua a porta 3000
 
             if (!res.ok) {
                 console.error('Erro na resposta da API:', res.status, res.statusText);
