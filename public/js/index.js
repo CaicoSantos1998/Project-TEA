@@ -194,12 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ user, password })
+            body: JSON.stringify({ username: user, password })
         });
 
         const data = await res.json();
 
-        if (data.sucess) {
+        if (data.success) {
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('detail').style.display = 'block';
             loadProtectedData();

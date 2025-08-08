@@ -259,7 +259,7 @@ st.post('/login', (req, res) => {
 
     if (valid) {
         req.session.autentic = true;
-        req.session.user = valid.username;
+        req.session.user = username;
         res.json({ success: true });
     } else {
         res.json({ success: false });
