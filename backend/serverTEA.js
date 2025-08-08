@@ -6,6 +6,9 @@ const session = require('express-session');
 const PDFDocument = require('pdfkit');
 
 const st = express();
+
+st.set('trust proxy', 1);
+
 st.use(cors());
 st.use(session({
     secret: 'key-secret-safe',
