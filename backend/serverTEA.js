@@ -2,9 +2,16 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+const PDFDocument = require('pdfkit');
 
 const st = express();
 st.use(cors());
+st.use(session({
+    secret: 'key-secret-safe',
+    resave: false,
+    saveUninitialized: false
+}));
 st.use(express.json());
 
 const db = mysql.createPool({
@@ -244,11 +251,33 @@ st.post('/login', (req, res) => {
     const valid = users.find(user => user.username === username && user.password === password);
 
     if (valid) {
+        req.session.autentic = true;
+        req.session.usuario = username;
         res.json({ success: true });
     } else {
         res.json({ success: false });
     }
 });
+
+st.get('/check-login', (req, res) => {
+    res.json({ logado: !!req.session.autentic });
+})
+
+st.get('/document.pdf', (req, res) => {
+    if (!req.session.autentic) {
+        return res.status(403).send('Acesso negado!')
+    }
+
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
+    doc.pipe(res);
+
+    doc.fontSize(15).text('Relatório privado');
+    doc.text('Este é o conteúdo sensível...');
+
+    doc.end();
+})
 
 st.get('/dataProtected', async (req, res) => {
     try {

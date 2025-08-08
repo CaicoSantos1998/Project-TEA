@@ -313,3 +313,17 @@ function formatarCelular(telefone) {
         return 'Número inválido';
     }
 };
+
+async function checkLogin() {
+    const res = await fetch('/check-login');
+    const data = await res.json();
+    if (data.logado){
+        document.getElementById('area-restrita').style.display = 'block';
+    }
+};
+
+checkLogin();
+
+function downloadPDF() {
+    window.location.href = '/document.pdf';
+};
