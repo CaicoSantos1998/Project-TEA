@@ -188,10 +188,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = document.getElementById('user').value;
         const password = document.getElementById('password').value;
 
-        if (user === 'pfmaragogipe' && password === 'h1h2h3TEA') {
+        const res = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ user, password})
+        });
+
+        const data = await res.json();
+
+        if (data.sucess) {
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('detail').style.display = 'block';
             loadProtectedData();
+            checkLogin();
         } else {
             document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
         }
