@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('btt-login').addEventListener('click', async () => {
-        const user = document.getElementById('user').value;
+        const username = document.getElementById('user').value;
         const password = document.getElementById('password').value;
 
         const res = await fetch('https://project-tea.onrender.com/login', {
@@ -194,12 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ user, password })
+            body: JSON.stringify({ username, password })
         });
 
         const data = await res.json();
 
-        if (data.sucess) {
+        if (data.success) {
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('detail').style.display = 'block';
             loadProtectedData();
