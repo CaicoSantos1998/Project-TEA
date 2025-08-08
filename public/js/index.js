@@ -188,13 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = document.getElementById('user').value;
         const password = document.getElementById('password').value;
 
-        const res = await fetch('/login', {
+        const res = await fetch('https://project-tea.onrender.com/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ user, password})
+            body: JSON.stringify({ user, password })
         });
 
         const data = await res.json();
