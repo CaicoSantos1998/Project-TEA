@@ -271,99 +271,70 @@ st.get('/check-login', (req, res) => {
     res.json({ logado: !!req.session.autentic });
 })
 
+async function findDataDatabase() {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'SELECT nome, email, telefone FROM usuarios',
+            (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(results);
+            }
+        );
+    });
+}
+
 st.get('/document.pdf', async (req, res) => {
     if (!req.session.autentic) {
         return res.status(403).send('Acesso negado!');
     }
 
-    const { nome, sexo, bairro, cidade, uf } = req.query;
+    try {
+        const dados = await findDataDatabase();
 
-    let query = `
-        SELECT p.nome AS 'Nome Pessoa', p.sexo, p.telefone, p.email, p.bairro, p.numeroImovel, p.complemento,
-               ds.nome AS 'Nome Distrito', cd.nome AS 'Nome Cidade', et.sigla AS 'UF'
-        FROM pessoa p
-        INNER JOIN distrito ds ON p.idDistrito = ds.id
-        INNER JOIN cidade cd ON ds.idCidade = cd.id
-        INNER JOIN estado et ON cd.idEstado = et.id
-    `;
+        const doc = new PDFDocument();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
+        doc.pipe(res);
 
-    const filters = [];
-    if (nome) filters.push(`p.nome LIKE '%${nome}%'`);
-    if (sexo) filters.push(`p.sexo = '${sexo}'`);
-    if (bairro) filters.push(`p.bairro LIKE '%${bairro}%'`);
-    if (cidade) filters.push(`cd.nome LIKE '%${cidade}%'`);
-    if (uf) filters.push(`et.sigla LIKE '%${uf}%'`);
-
-    if (filters.length > 0) {
-        query += ' WHERE ' + filters.join(' AND ');
-    }
-
-    query += ' ORDER BY 1';
-
-    const [dados] = await db.query(query);
-
-    const doc = new PDFDocument();
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
-    doc.pipe(res);
-
-    doc.fontSize(15).text('Relatório privado', { align: 'center'});
-    doc.moveDown();
-
-    if (dataTable.length > 0) {
-        Object.keys(dataTable[0]).forEach(key => {
-            doc.fontSize(12).text(key, { continued: true }).text(' | ', { continued: true });
-        });
+        doc.fontSize(18).text('Relatório privado', { align: 'center' });
         doc.moveDown();
 
-        dataTable.forEach(item => {
-            Object.values(item).forEach(value => {
-                doc.fontSize(10).text(String(value), { continued: true }).text(' | ', { continued: true });
+        if (dados.length > 0) {
+            Object.keys(dados[0]).forEach(key => {
+                doc.fontSize(12).text(key, { continued: true }).text(' | ', { continued: true });
             });
             doc.moveDown();
-        });
-    } else {
-        doc.text('Nenhum dado encontrado.');
-    }
 
-    doc.end();
+            dados.forEach(item => {
+                Object.values(item).forEach(value => {
+                    doc.fontSize(10).text(String(value), { continued: true }).text(' | ', { continued: true });
+                });
+                doc.moveDown();
+            });
+        } else {
+            doc.text('Nenhum dado encontrado.');
+        }
+
+        doc.end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erro ao gerar PDF');
+    }
 });
 
 st.get('/dataProtected', async (req, res) => {
+    if (!req.session.autentic) {
+        return res.status(403).json({ error: 'Acesso negado!' });
+    }
+
     try {
-        const { user, password, nome, sexo, bairro, cidade, uf } = req.query;
-
-        if (user !== 'pfmaragogipe' || password !== 'h1h2h3TEA') {
-            return res.status(403).json({ error: 'Acesso não autorizado!'});
-        }
-
-        let query = `
-            SELECT p.nome AS 'Nome Pessoa', p.sexo, p.telefone, p.email, p.bairro, p.numeroImovel, p.complemento,
-                   ds.nome AS 'Nome Distrito', cd.nome AS 'Nome Cidade', et.sigla AS 'UF'
-            FROM pessoa p
-            INNER JOIN distrito ds ON p.idDistrito = ds.id
-            INNER JOIN cidade cd ON ds.idCidade = cd.id
-            INNER JOIN estado et ON cd.idEstado = et.id
-        `;
-
-        const filters = [];
-        if (nome) filters.push(`p.nome LIKE '%${nome}%'`);
-        if (sexo) filters.push(`p.sexo = '${sexo}'`);
-        if (bairro) filters.push(`p.bairro LIKE '%${bairro}%'`);
-        if (cidade) filters.push(`cd.nome LIKE '%${cidade}%'`);
-        if (uf) filters.push(`et.sigla LIKE '%${uf}%'`);
-
-        if (filters.length > 0) {
-            query += ' WHERE ' + filters.join(' AND ');
-        }
-
-        query += ' ORDER BY 1';
-
-        const [rows] = await db.query(query);
-        res.json(rows);
+        const dados = await findDataDatabase();
+        res.json(dados);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Erro ao buscar dados protegidos' });
+        res.status(500).json({ error: 'Erro ao carregar os dados' });
     }
 });
 
