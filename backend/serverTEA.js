@@ -5,6 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const PDFDocument = require('pdfkit');
 const { error } = require('console');
+import PDFDocument from 'pdfkit';
 
 const st = express();
 
@@ -291,7 +292,7 @@ st.get('/document.pdf', async (req, res) => {
     }
 
     try {
-        const dados = await findDataDatabase();
+        const dados = await findDataDatabase(); // mesma função da tabela
 
         const doc = new PDFDocument();
         res.setHeader('Content-Type', 'application/pdf');
@@ -302,11 +303,13 @@ st.get('/document.pdf', async (req, res) => {
         doc.moveDown();
 
         if (dados.length > 0) {
+            // Cabeçalho
             Object.keys(dados[0]).forEach(key => {
                 doc.fontSize(12).text(key, { continued: true }).text(' | ', { continued: true });
             });
             doc.moveDown();
 
+            // Linhas
             dados.forEach(item => {
                 Object.values(item).forEach(value => {
                     doc.fontSize(10).text(String(value), { continued: true }).text(' | ', { continued: true });
