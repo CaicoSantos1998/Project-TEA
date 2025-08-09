@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const PDFDocument = require('pdfkit');
+const { error } = require('console');
 
 const st = express();
 
@@ -270,25 +271,71 @@ st.get('/check-login', (req, res) => {
     res.json({ logado: !!req.session.autentic });
 })
 
-st.get('/document.pdf', (req, res) => {
+st.get('/document.pdf', async (req, res) => {
     if (!req.session.autentic) {
-        return res.status(403).send('Acesso negado!')
+        return res.status(403).send('Acesso negado!');
     }
+
+    const { nome, sexo, bairro, cidade, uf } = req.query;
+
+    let query = `
+        SELECT p.nome AS 'Nome Pessoa', p.sexo, p.telefone, p.email, p.bairro, p.numeroImovel, p.complemento,
+               ds.nome AS 'Nome Distrito', cd.nome AS 'Nome Cidade', et.sigla AS 'UF'
+        FROM pessoa p
+        INNER JOIN distrito ds ON p.idDistrito = ds.id
+        INNER JOIN cidade cd ON ds.idCidade = cd.id
+        INNER JOIN estado et ON cd.idEstado = et.id
+    `;
+
+    const filters = [];
+    if (nome) filters.push(`p.nome LIKE '%${nome}%'`);
+    if (sexo) filters.push(`p.sexo = '${sexo}'`);
+    if (bairro) filters.push(`p.bairro LIKE '%${bairro}%'`);
+    if (cidade) filters.push(`cd.nome LIKE '%${cidade}%'`);
+    if (uf) filters.push(`et.sigla LIKE '%${uf}%'`);
+
+    if (filters.length > 0) {
+        query += ' WHERE ' + filters.join(' AND ');
+    }
+
+    query += ' ORDER BY 1';
+
+    const [dados] = await db.query(query);
 
     const doc = new PDFDocument();
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=document.pdf');
     doc.pipe(res);
 
-    doc.fontSize(15).text('Relatório privado');
-    doc.text('Este é o conteúdo sensível...');
+    doc.fontSize(15).text('Relatório privado', { align: 'center'});
+    doc.moveDown();
+
+    if (dataTable.length > 0) {
+        Object.keys(dataTable[0]).forEach(key => {
+            doc.fontSize(12).text(key, { continued: true }).text(' | ', { continued: true });
+        });
+        doc.moveDown();
+
+        dataTable.forEach(item => {
+            Object.values(item).forEach(value => {
+                doc.fontSize(10).text(String(value), { continued: true }).text(' | ', { continued: true });
+            });
+            doc.moveDown();
+        });
+    } else {
+        doc.text('Nenhum dado encontrado.');
+    }
 
     doc.end();
-})
+});
 
 st.get('/dataProtected', async (req, res) => {
     try {
-        const { nome, sexo, bairro, cidade, uf } = req.query;
+        const { user, password, nome, sexo, bairro, cidade, uf } = req.query;
+
+        if (user !== 'pfmaragogipe' || password !== 'h1h2h3TEA') {
+            return res.status(403).json({ error: 'Acesso não autorizado!'});
+        }
 
         let query = `
             SELECT p.nome AS 'Nome Pessoa', p.sexo, p.telefone, p.email, p.bairro, p.numeroImovel, p.complemento,
