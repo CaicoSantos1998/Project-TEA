@@ -212,7 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadProtectedData() {
         try {
             console.log('Carregando dados protegidos...');
-            const res = await fetch('https://project-tea.onrender.com/dataProtected');  // Inclua a porta 3000
+            const res = await fetch('https://project-tea.onrender.com/dataProtected', {
+                credentials: 'include'
+            })
 
             if (!res.ok) {
                 console.error('Erro na resposta da API:', res.status, res.statusText);
