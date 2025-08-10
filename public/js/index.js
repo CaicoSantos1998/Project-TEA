@@ -209,138 +209,139 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
         }
     });
+});
 
-    async function loadProtectedData() {
-        try {
-            console.log('Carregando dados protegidos...');
-            const res = await fetch('https://project-tea.onrender.com/dataProtected', {
-                credentials: 'include'
+async function loadProtectedData() {
+    try {
+        console.log('Carregando dados protegidos...');
+        const res = await fetch('https://project-tea.onrender.com/dataProtected', {
+            credentials: 'include'
+        });
+
+        if (!res.ok) {
+            console.error('Erro na resposta da API:', res.status, res.statusText);
+            throw new Error('Falha ao carregar dados protegidos.');
+        }
+
+        const data = await res.json();
+        console.log('Dados recebidos da API:', data);
+
+        const container = document.getElementById('dataProtected');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.textContent = 'Nenhum dado encontrado.';
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.marginTop = '20px';
+
+        const styleCell = (cell) => {
+            cell.style.border = '1px solid black';
+            cell.style.padding = '8px';
+            cell.style.textAlign = 'left';
+        };
+
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            styleCell(th);
+            th.style.backgroundColor = '#f2f2f2';
+            headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        data.forEach(pessoa => {
+            const row = document.createElement('tr');
+            Object.values(pessoa).forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                styleCell(td);
+                row.appendChild(td);
             });
+            table.appendChild(row);
+        });
 
-            if (!res.ok) {
-                console.error('Erro na resposta da API:', res.status, res.statusText);
-                throw new Error('Falha ao carregar dados protegidos.');
-            }
+        container.appendChild(table);
+    } catch (error) {
+        console.error('Erro ao carregar dados protegidos:', error);
+        const container = document.getElementById('dataProtected');
+        container.innerHTML = '<p>Erro ao carregar os dados. Tente novamente mais tarde.</p>';
+    }
+}
 
-            const data = await res.json();
-            console.log('Dados recebidos da API:', data);
 
-            const container = document.getElementById('dataProtected');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.textContent = 'Nenhum dado encontrado.';
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.style.borderCollapse = 'collapse';
-            table.style.width = '100%';
-            table.style.marginTop = '20px';
-
-            const styleCell = (cell) => {
-                cell.style.border = '1px solid black';
-                cell.style.padding = '8px';
-                cell.style.textAlign = 'left';
-            };
-
-            const headerRow = document.createElement('tr');
-            Object.keys(data[0]).forEach(key => {
-                const th = document.createElement('th');
-                th.textContent = key;
-                styleCell(th);
-                th.style.backgroundColor = '#f2f2f2';
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
-
-            data.forEach(pessoa => {
-                const row = document.createElement('tr');
-                Object.values(pessoa).forEach(value => {
-                    const td = document.createElement('td');
-                    td.textContent = value;
-                    styleCell(td);
-                    row.appendChild(td);
-                });
-                table.appendChild(row);
-            });
-
-            container.appendChild(table);
-        } catch (error) {
-            console.error('Erro ao carregar dados protegidos:', error);
-            const container = document.getElementById('dataProtected');
-            container.innerHTML = '<p>Erro ao carregar os dados. Tente novamente mais tarde.</p>';
+function verificarOutros() {
+    const radios = document.getElementsByName("sexo");
+    const inputOutros = document.getElementById('outroSexos');
+    let selecionado = "";
+    for (let i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            selecionado = radios[i].value;
+            break;
         }
     }
 
+    if (selecionado === "outroSexo") {
+        inputOutros.disabled = false;
+        inputOutros.focus();
+    } else {
+        inputOutros.value = "";
+        inputOutros.disabled = true;
+    }
+};
 
-    function verificarOutros() {
-        const radios = document.getElementsByName("sexo");
-        const inputOutros = document.getElementById('outroSexos');
-        let selecionado = "";
-        for (let i = 0; i < radios.length; i++) {
-            if (radios[i].checked) {
-                selecionado = radios[i].value;
-                break;
-            }
-        }
+function verificarEsgoto() {
+    const esgoto = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
+    const naoTemEsgoto = document.getElementById('opcoes');
+    naoTemEsgoto.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
 
-        if (selecionado === "outroSexo") {
-            inputOutros.disabled = false;
-            inputOutros.focus();
-        } else {
-            inputOutros.value = "";
-            inputOutros.disabled = true;
-        }
-    };
-
-    function verificarEsgoto() {
-        const esgoto = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
-        const naoTemEsgoto = document.getElementById('opcoes');
-        naoTemEsgoto.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
-
-        if (esgoto === 'Sim') {
+    if (esgoto === 'Sim') {
+        const option = document.createElement('option');
+        option.value = 'NoSistemaDeEsgoto';
+        option.text = 'No Sistema de esgoto';
+        naoTemEsgoto.appendChild(option);
+    } else if (esgoto === 'Nao') {
+        const opcaoNao = [
+            { value: 'NoMar', text:'No Mar'},
+            { value: 'CeuAberto', text:'Ceu Aberto'},
+            { value: 'NoMangue', text: 'No Mangue'}
+        ];
+        opcaoNao.forEach((opt) => {
             const option = document.createElement('option');
-            option.value = 'NoSistemaDeEsgoto';
-            option.text = 'No Sistema de esgoto';
+            option.value = opt.value;
+            option.text = opt.text;
             naoTemEsgoto.appendChild(option);
-        } else if (esgoto === 'Nao') {
-            const opcaoNao = [
-                { value: 'NoMar', text:'No Mar'},
-                { value: 'CeuAberto', text:'Ceu Aberto'},
-                { value: 'NoMangue', text: 'No Mangue'}
-            ];
-            opcaoNao.forEach((opt) => {
-                const option = document.createElement('option');
-                option.value = opt.value;
-                option.text = opt.text;
-                naoTemEsgoto.appendChild(option);
-            })
-        }
-    };
+        })
+    }
+};
 
-    function formatarCelular(telefone) {
-        telefone = telefone.replace(/\D/g, '');
-        
-        if (telefone.length === 11) {
-            return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
-        } else {
-            return 'Número inválido';
-        }
-    };
+function formatarCelular(telefone) {
+    telefone = telefone.replace(/\D/g, '');
+    
+    if (telefone.length === 11) {
+        return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
+    } else {
+        return 'Número inválido';
+    }
+};
 
-    async function checkLogin() {
-        const res = await fetch('/check-login');
-        const data = await res.json();
-        if (data.logado){
-            document.getElementById('area-restrita').style.display = 'block';
-        }
-    };
+async function checkLogin() {
+    const res = await fetch('/check-login');
+    const data = await res.json();
+    if (data.logado){
+        document.getElementById('area-restrita').style.display = 'block';
+    }
+};
 
-    checkLogin();
+checkLogin();
 
-    function downloadPDF() {
-        window.location.href = '/document.pdf';
-    };
+function downloadPDF() {
+    window.location.href = '/document.pdf';
+};
 
-});
+}
