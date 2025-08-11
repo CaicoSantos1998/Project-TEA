@@ -279,7 +279,7 @@ st.get('/check-login', (req, res) => {
 async function findDataDatabase(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
-            'SELECT nome, email, telefone FROM usuarios',
+            'SELECT nome, email, telefone FROM pessoa',
             (error, results) => {
                 if (error) {
                     return reject(error);
