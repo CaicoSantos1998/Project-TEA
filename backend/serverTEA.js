@@ -280,7 +280,7 @@ st.get('/check-login', (req, res) => {
     res.json({ logado: !!req.session.autentic });
 })
 
-async function findDataDatabase(connection) {
+async function findDataDatabase() {
     return new Promise((resolve, reject) => {
         connection.query(
             'SELECT nome, email, telefone FROM pessoa',
@@ -301,7 +301,7 @@ st.get('/document.pdf', async (req, res) => {
     }
 
     try {
-        const dados = await findDataDatabase(); // mesma função da tabela
+        const dados = await findDataDatabase();
 
         const doc = new PDFDocument();
         res.setHeader('Content-Type', 'application/pdf');
@@ -341,7 +341,7 @@ st.get('/dataProtected', async (req, res) => {
     }
 
     try {
-        const dados = await findDataDatabase(connection);
+        const dados = await findDataDatabase();
         res.json(dados);
     } catch (err) {
         console.error(err);
