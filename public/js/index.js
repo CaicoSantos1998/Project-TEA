@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('myChart');
     const dadosDetalhadosTitle = document.getElementById('dadosDetalhadosTitle');
     const form = document.getElementById('formPessoas'); 
-    loadProtectedData();
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -209,71 +208,69 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
         }
     });
-});
 
-async function loadProtectedData() {
-    try {
-        console.log('Carregando dados protegidos...');
-        const res = await fetch('https://project-tea.onrender.com/dataProtected', {
-            credentials: 'include'
-        });
-
-        if (!res.ok) {
-            console.error('Erro na resposta da API:', res.status, res.statusText);
-            throw new Error('Falha ao carregar dados protegidos.');
-        }
-
-        const data = await res.json();
-        console.log('Dados recebidos da API:', data);
-
-        const container = document.getElementById('dataProtected');
-        container.innerHTML = '';
-
-        if (data.length === 0) {
-            container.textContent = 'Nenhum dado encontrado.';
-            return;
-        }
-
-        const table = document.createElement('table');
-        table.style.borderCollapse = 'collapse';
-        table.style.width = '100%';
-        table.style.marginTop = '20px';
-
-        const styleCell = (cell) => {
-            cell.style.border = '1px solid black';
-            cell.style.padding = '8px';
-            cell.style.textAlign = 'left';
-        };
-
-        const headerRow = document.createElement('tr');
-        Object.keys(data[0]).forEach(key => {
-            const th = document.createElement('th');
-            th.textContent = key;
-            styleCell(th);
-            th.style.backgroundColor = '#f2f2f2';
-            headerRow.appendChild(th);
-        });
-        table.appendChild(headerRow);
-
-        data.forEach(pessoa => {
-            const row = document.createElement('tr');
-            Object.values(pessoa).forEach(value => {
-                const td = document.createElement('td');
-                td.textContent = value;
-                styleCell(td);
-                row.appendChild(td);
+    async function loadProtectedData() {
+        try {
+            console.log('Carregando dados protegidos...');
+            const res = await fetch('https://project-tea.onrender.com/dataProtected', {
+                credentials: 'include'
             });
-            table.appendChild(row);
-        });
 
-        container.appendChild(table);
-    } catch (error) {
-        console.error('Erro ao carregar dados protegidos:', error);
-        const container = document.getElementById('dataProtected');
-        container.innerHTML = '<p>Erro ao carregar os dados. Tente novamente mais tarde.</p>';
+            if (!res.ok) {
+                console.error('Erro na resposta da API:', res.status, res.statusText);
+                throw new Error('Falha ao carregar dados protegidos.');
+            }
+
+            const data = await res.json();
+            console.log('Dados recebidos da API:', data);
+
+            const container = document.getElementById('dataProtected');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.textContent = 'Nenhum dado encontrado.';
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.style.borderCollapse = 'collapse';
+            table.style.width = '100%';
+            table.style.marginTop = '20px';
+
+            const styleCell = (cell) => {
+                cell.style.border = '1px solid black';
+                cell.style.padding = '8px';
+                cell.style.textAlign = 'left';
+            };
+
+            const headerRow = document.createElement('tr');
+            Object.keys(data[0]).forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                styleCell(th);
+                th.style.backgroundColor = '#f2f2f2';
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            data.forEach(pessoa => {
+                const row = document.createElement('tr');
+                Object.values(pessoa).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    styleCell(td);
+                    row.appendChild(td);
+                });
+                table.appendChild(row);
+            });
+
+            container.appendChild(table);
+        } catch (error) {
+            console.error('Erro ao carregar dados protegidos:', error);
+            const container = document.getElementById('dataProtected');
+            container.innerHTML = '<p>Erro ao carregar os dados. Tente novamente mais tarde.</p>';
+        }
     }
-}
-
 
 function verificarOutros() {
     const radios = document.getElementsByName("sexo");
@@ -344,4 +341,4 @@ function downloadPDF() {
     window.location.href = '/document.pdf';
 };
 
-}
+});
