@@ -272,6 +272,10 @@ st.post('/login', (req, res) => {
     }
 });
 
+st.get('/test', (req, res) => {
+    res.send('IS WORKING!!!')
+})
+
 st.get('/check-login', (req, res) => {
     res.json({ logado: !!req.session.autentic });
 })
