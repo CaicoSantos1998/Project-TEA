@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadProtectedData() {
         try {
             console.log('Carregando dados protegidos...');
-            const res = await fetch('https://project-tea.onrender.com/dataProtected', {
+            const res = await fetch('/dataProtected', {
                 credentials: 'include'
             });
 
