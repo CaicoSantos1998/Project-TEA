@@ -282,6 +282,7 @@ async function findDataDatabase(connection) {
             'SELECT nome, email, telefone FROM pessoa',
             (error, results) => {
                 if (error) {
+                    console.error('Erro na consulta SQL:', err);
                     return reject(error);
                 }
                 resolve(results);
