@@ -10,7 +10,11 @@ const st = express();
 
 st.set('trust proxy', 1);
 
-st.use(cors());
+st.use(cors({
+    origin: 'https://project-tea.onrender.com',
+    credentials: true
+}));
+
 st.use(session({
     secret: 'key-secret-safe',
     resave: false,
@@ -20,6 +24,7 @@ st.use(session({
         sameSite: 'lax'
     }
 }));
+
 st.use(express.json());
 
 const db = mysql.createPool({
@@ -271,7 +276,7 @@ st.get('/check-login', (req, res) => {
     res.json({ logado: !!req.session.autentic });
 })
 
-async function findDataDatabase() {
+async function findDataDatabase(connection) {
     return new Promise((resolve, reject) => {
         connection.query(
             'SELECT nome, email, telefone FROM usuarios',
@@ -331,7 +336,7 @@ st.get('/dataProtected', async (req, res) => {
     }
 
     try {
-        const dados = await findDataDatabase();
+        const dados = await findDataDatabase(connection);
         res.json(dados);
     } catch (err) {
         console.error(err);
