@@ -29,7 +29,7 @@
 
             <div class="field-name">
                 <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome"> 
+                <input type="text" id="nome" name="nome" oninput="this.value = this.value.replace(/[0-9!@#$%^&*()_+=\[\]{};':\,.<>?\\|`~]/g, '')" maxlength="100"> 
             </div>
 
             <div class="field">
@@ -48,7 +48,7 @@
 
             <div class="field">
                 <label for="telefone">Telefone:</label>
-                <input type="tel" name="telefone" id="field-telefone" placeholder="(xx) 9xxxx-xxxx">
+                <input type="tel" name="telefone" id="field-telefone" oninput="this.value = this.value.replace(/\D/g, '')" placeholder="(xx) 9xxxx-xxxx" maxlength="11">
             </div>
 
             <div class="field">
@@ -117,7 +117,7 @@
     </div>
     
     <footer>
-        <h1>Todos os direitos reservados - 2025</h1>
+        <h1>Todos os direitos reservados - 2026</h1>
     </footer>
     
     <script src="../js/index.js"></script>

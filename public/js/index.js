@@ -289,8 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             inputOutros.disabled = true;
             inputOutros.value = "";
-            
         }
+        inputOutros.addEventListener('input', () => {
+        inputOutros.value = inputOutros.value.replace(/[0-9]/g, '');
+    });
         document.querySelectorAll('input[name="sexo"]').forEach((radio) => {
         radio.addEventListener('change', verificarOutros);
     });
@@ -324,15 +326,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     };
 
-    function formatarCelular(telefone) {
-        telefone = telefone.replace(/\D/g, '');
-        
-        if (telefone.length === 11) {
-            return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
-        } else {
-            return 'Número inválido';
+    function formatarCelular() {
+        console.log("A FUNÇÃO FORMATAR CELULAR FOI CARREGADA COM SUCESSO!");
+        const inputTelefone = document.querySelector('input[name="telefone"]');
+        if (!inputTelefone) {
+            console.log("ERRO: O JavaScript não encontrou o campo de telefone na página!");
+            return;
         }
-    };
+        inputTelefone.addEventListener('keydown', (e) => {
+            const teclasPermitidas = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+            if (teclasPermitidas.includes(e.key) || (e.ctrlKey === true || e.metaKey === true)) {
+                return;
+            }
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+        inputTelefone.addEventListener('input', (e) => {
+            let valor = e.target.value;
+            valor = valor.replace(/\D/g, '');
+            if (valor.length > 11) {
+                valor = valor.slice(0, 11);
+            }
+            if (valor.length > 7) {
+                valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (valor.length > 2) {
+                valor = valor.replace(/^(\d{2})(\d+)/, '($1) $2');
+            } else if (valor.length > 0) {
+                valor = valor.replace(/^(\d+)/, '($1');
+            }
+        
+        e.target.value = valor;
+        });
+    }
+    formatarCelular();
 
     async function checkLogin() {
         const res = await fetch('/check-login');
@@ -343,9 +370,5 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     checkLogin();
-
-    function downloadPDF() {
-        window.location.href = '/document.pdf';
-    };
 
 });
