@@ -36,20 +36,14 @@
                 <label>Sexo:</label>
                 <label><input type="radio" name="sexo" value="masculino"> Masculino</label>
                 <label><input type="radio" name="sexo" value="feminino"> Feminino</label>
-                <label>
-                    <input type="radio" name="sexo" value="outroSexo"> Outro
-                    <input type="text" id="outroSexos" disabled placeholder="Especifique">
-                </label>
-            </div>
-
-            <div class="field" id="campo-outros" style="display: none;">
-                <label for="descricao-outros">Como você se identifica?</label>
-                <input type="text" name="descricao-outros" id="descricao-outros" disabled>
+                <label><input type="radio" name="sexo" value="outroSexo"> Outro</label>
+                <input type="text" id="outroSexos" disabled placeholder="Especifique" maxlength="30">
+                
             </div>
 
             <div class="field">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email">
+                <input type="email" name="email" id="email" maxlength="200">
             </div>
 
             <div class="field">

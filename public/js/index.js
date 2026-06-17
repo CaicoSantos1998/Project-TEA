@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    screenLogin.style.display = 'none';
-    detailSection.style.display = 'none';
-    dataProtectedSection.style.display = 'none';
-    canvas.style.display = 'none';
+    if (screenLogin) screenLogin.style.display = 'none';
+    if (detailSection) detailSection.style.display = 'none';
+    if (dataProtectedSection) dataProtectedSection.style.display = 'none';
+    if (canvas) canvas.style.display = 'none';
 
     if (dadosDetalhadosTitle) dadosDetalhadosTitle.style.display = 'none';
 
