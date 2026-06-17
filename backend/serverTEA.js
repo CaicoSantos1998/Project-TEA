@@ -28,7 +28,17 @@ st.use(session({
 st.use(express.json());
 
 const db = mysql.createPool({
-	uri: 'mysql://root:rNpyYjhhRoadYPHZXttDfVLaGcGlEfTm@gondola.proxy.rlwy.net:42035/railway'
+	host: 'gateway01.us-east-1.prod.aws.tidbcloud.com',
+    port: 4000,
+    user: '3oyxWSfSWwwjvJz.root',
+    password: '68jDuaCGLTSnUdSC', 
+    database: 'test',
+    waitForConnections: true,
+    connectionLimit: 5,
+    ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
+    }
 });
 
 async function createTables() {
