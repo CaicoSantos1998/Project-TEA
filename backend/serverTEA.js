@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
@@ -28,11 +29,11 @@ st.use(session({
 st.use(express.json());
 
 const db = mysql.createPool({
-	host: 'gateway01.us-east-1.prod.aws.tidbcloud.com',
-    port: 4000,
-    user: '3oyxWSfSWwwjvJz.root',
-    password: '68jDuaCGLTSnUdSC', 
-    database: 'test',
+	host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD, 
+    database: process.env.DB_DATABASE,
     waitForConnections: true,
     connectionLimit: 5,
     ssl: {

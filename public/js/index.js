@@ -272,73 +272,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-function verificarOutros() {
-    const radios = document.getElementsByName("sexo");
-    const inputOutros = document.getElementById('outroSexos');
-    let selecionado = "";
-    for (let i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-            selecionado = radios[i].value;
-            break;
+    function verificarOutros() {
+        const radios = document.getElementsByName("sexo");
+        const inputOutros = document.getElementById('outroSexos');
+        let selecionado = "";
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                selecionado = radios[i].value;
+                break;
+            }
         }
-    }
 
-    if (selecionado === "outroSexo") {
-        inputOutros.disabled = false;
-        inputOutros.focus();
-    } else {
-        inputOutros.value = "";
-        inputOutros.disabled = true;
-    }
-};
+        if (selecionado === "outroSexo") {
+            inputOutros.disabled = false;
+            inputOutros.focus();
+        } else {
+            inputOutros.disabled = true;
+            inputOutros.value = "";
+            
+        }
+        document.querySelectorAll('input[name="sexo"]').forEach((radio) => {
+        radio.addEventListener('change', verificarOutros);
+    });
+    };
 
-function verificarEsgoto() {
-    const esgoto = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
-    const naoTemEsgoto = document.getElementById('opcoes');
-    naoTemEsgoto.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
+    function verificarEsgoto() {
+        const esgoto = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
+        const naoTemEsgoto = document.getElementById('opcoes');
+        naoTemEsgoto.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
 
-    if (esgoto === 'Sim') {
-        const option = document.createElement('option');
-        option.value = 'NoSistemaDeEsgoto';
-        option.text = 'No Sistema de esgoto';
-        naoTemEsgoto.appendChild(option);
-    } else if (esgoto === 'Nao') {
-        const opcaoNao = [
-            { value: 'NoMar', text:'No Mar'},
-            { value: 'CeuAberto', text:'Ceu Aberto'},
-            { value: 'NoMangue', text: 'No Mangue'}
-        ];
-        opcaoNao.forEach((opt) => {
+        if (esgoto === 'Sim') {
             const option = document.createElement('option');
-            option.value = opt.value;
-            option.text = opt.text;
+            option.value = 'NoSistemaDeEsgoto';
+            option.text = 'No Sistema de esgoto';
             naoTemEsgoto.appendChild(option);
-        })
-    }
-};
+        } else if (esgoto === 'Nao') {
+            const opcaoNao = [
+                { value: 'NoMar', text:'No Mar'},
+                { value: 'CeuAberto', text:'Ceu Aberto'},
+                { value: 'NoMangue', text: 'No Mangue'}
+            ];
+            opcaoNao.forEach((opt) => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.text = opt.text;
+                naoTemEsgoto.appendChild(option);
+            })
+        }
+        document.querySelectorAll('input[name="temEsgotoAi"]').forEach((radio) => {
+        radio.addEventListener('change', verificarEsgoto); 
+    });
+    };
 
-function formatarCelular(telefone) {
-    telefone = telefone.replace(/\D/g, '');
-    
-    if (telefone.length === 11) {
-        return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
-    } else {
-        return 'Número inválido';
-    }
-};
+    function formatarCelular(telefone) {
+        telefone = telefone.replace(/\D/g, '');
+        
+        if (telefone.length === 11) {
+            return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2$3-$4');
+        } else {
+            return 'Número inválido';
+        }
+    };
 
-async function checkLogin() {
-    const res = await fetch('/check-login');
-    const data = await res.json();
-    if (data.logado){
-        document.getElementById('area-restrita').style.display = 'block';
-    }
-};
+    async function checkLogin() {
+        const res = await fetch('/check-login');
+        const data = await res.json();
+        if (data.logado){
+            document.getElementById('area-restrita').style.display = 'block';
+        }
+    };
 
-checkLogin();
+    checkLogin();
 
-function downloadPDF() {
-    window.location.href = '/document.pdf';
-};
+    function downloadPDF() {
+        window.location.href = '/document.pdf';
+    };
 
 });
