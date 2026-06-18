@@ -222,7 +222,7 @@ st.get('/percentage', async (req, res) => {
             `;
         }
 
-        const [rows] = await db.execute(query);
+        const [rows] = await db.query(query);
         res.json(rows);
     } catch (error) {
         console.error('Erro ao buscar dados para gráfico:', error);
@@ -232,8 +232,8 @@ st.get('/percentage', async (req, res) => {
 
 st.get('/bairros', async (req, res) => {
     try {
-        const [rows] = await db.execute(
-            'SELECT DISTINCT bairro FROM pessoa WHERE idDistrito = ?', [1]
+        const [rows] = await db.query(
+            'SELECT DISTINCT bairro FROM pessoa WHERE bairro IS NOT NULL AND bairro != \'\''
         );
         res.json(rows.map(r => r.bairro));
     } catch (error) {
@@ -245,7 +245,7 @@ st.get('/bairros', async (req, res) => {
 st.get('/ruas', async (req, res) => {
     try {
         const [rows] = await db.execute(
-            'SELECT DISTINCT rua FROM pessoa WHERE idDistrito = ?', [1]
+            'SELECT DISTINCT rua FROM pessoa WHERE rua IS NOT NULL AND rua != \'\''
         );
         res.json(rows.map(r => r.rua));
     } catch (error) {
