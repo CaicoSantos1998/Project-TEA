@@ -63,12 +63,28 @@
             
             <div class="field">
                 <label for="NI">Número do Imóvel:</label>
-                <input type="text" name="numeroImovel" id="nbI">
+                <input type="text" name="numeroImovel" id="nbI" oninput="this.value = this.value.replace(/\D/g, '')">
             </div>
             
             <div class="field">
                 <label for="complemento">Complemento:</label>
                 <input type="text" name="complemento"> 
+            </div>
+
+            <div class="field">
+                <label for="estado">Estado:</label>
+                <select name="estado">
+                    <option value="" selected disabled>...</option>
+                    <option value="BA">BA</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="cidade">Cidade:</label>
+                <select name="cidade">
+                    <option value="" selected disabled>...</option>
+                    <option value="Maragogipe">Maragogipe</option>
+                </select>
             </div>
 
             <div class="field">
@@ -79,22 +95,6 @@
                 </select>
             </div>
             
-            <div class="field">
-                <label for="cidade">Cidade:</label>
-                <select name="cidade">
-                    <option value="" selected disabled>...</option>
-                    <option value="Maragogipe">Maragogipe</option>
-                </select>
-            </div>
-            
-            <div class="field">
-                <label for="estado">Estado:</label>
-                <select name="estado">
-                    <option value="" selected disabled>...</option>
-                    <option value="BA">BA</option>
-                </select>
-            </div>
-
             <div class="field">
                 <label for="temEsgotoAi">Tem esgoto na sua casa:</label>
                 <label>SIM <input type="radio" id="simTemEsgoto" value="Sim" name="temEsgotoAi"></label> 

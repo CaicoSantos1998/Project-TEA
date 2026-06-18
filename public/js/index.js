@@ -1,11 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const mostrarGraficoButton = document.getElementById('mostrarGraficoButton');
-    const mostrarDetalhesButton = document.getElementById('showDetail');
-    const screenLogin = document.getElementById('screen-login');
-    const detailSection = document.getElementById('detail');
-    const dataProtectedSection = document.getElementById('dataProtected');
+    const bttShowGraph = document.getElementById('mostrarGraficoButton');
     const canvas = document.getElementById('myChart');
-    const dadosDetalhadosTitle = document.getElementById('dadosDetalhadosTitle');
     const form = document.getElementById('formPessoas'); 
 
     if (form) {
@@ -13,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const formData = new FormData(form);
-            const dados = Object.fromEntries(formData.entries());
+            const allData = Object.fromEntries(formData.entries());
 
             try {
                 const response = await fetch('https://project-tea.onrender.com/form', {
@@ -21,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(dados),
+                    body: JSON.stringify(allData),
                 });
 
                 const data = await response.json();
@@ -39,36 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (screenLogin) screenLogin.style.display = 'none';
-    if (detailSection) detailSection.style.display = 'none';
-    if (dataProtectedSection) dataProtectedSection.style.display = 'none';
     if (canvas) canvas.style.display = 'none';
 
-    if (dadosDetalhadosTitle) dadosDetalhadosTitle.style.display = 'none';
-
-    function toggleSections(showGraphic) {
-        if (showGraphic) {
-            dataProtectedSection.style.display = 'none';
-            if (dadosDetalhadosTitle) dadosDetalhadosTitle.style.display = 'none';
-            canvas.style.display = 'block';
-        } else {
-            canvas.style.display = 'none';
-            dataProtectedSection.style.display = 'block';
-            if (dadosDetalhadosTitle) dadosDetalhadosTitle.style.display = 'block';
-        }
-    }
-
-    if (mostrarGraficoButton) {
-        mostrarGraficoButton.addEventListener('click', () => {
-            toggleSections(true);
-            const filtro = document.getElementById('filtro').value;
-            updateGraphic(filtro);
-        });
-    }
-
-    if (mostrarDetalhesButton) {
-        mostrarDetalhesButton.addEventListener('click', () => {
-            toggleSections(false);
+    if (bttShowGraph) {
+        bttShowGraph.addEventListener('click', () => {
+            const filter = document.getElementById('filtro').value;
+            updateGraphic(filter);
         });
     }
 
@@ -143,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: { labels, datasets },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -168,113 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('input[name="sexo"]').forEach((radio) => {
-        radio.addEventListener('change', verificarOutros);
+        radio.addEventListener('change', validateGender);
     });
 
     document.querySelectorAll('input[name="temEsgotoAi"]').forEach((radio) => {
-        radio.addEventListener('change', verificarEsgoto);
+        radio.addEventListener('change', validateSewage);
     });
 
-    const showDetailButton = document.getElementById('showDetail');
-    if (showDetailButton) {
-        showDetailButton.addEventListener('click', () => {
-            document.getElementById('screen-login').style.display = 'block';
-            document.getElementById('detail').style.display = 'none';
-            document.getElementById('msg-error').textContent = '';
-        });
-    }
+    
 
-    document.getElementById('btt-login').addEventListener('click', async () => {
-        const user = document.getElementById('user').value;
-        const password = document.getElementById('password').value;
-
-        const res = await fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({ username: user, password })
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('detail').style.display = 'block';
-            loadProtectedData();
-            checkLogin();
-        } else {
-            document.getElementById('msg-error').textContent = 'Usuário ou senha inválidos';
-        }
-    });
-
-    async function loadProtectedData() {
-        try {
-            console.log('Carregando dados protegidos...');
-            const res = await fetch('/dataProtected', {
-                credentials: 'include'
-            });
-
-            if (!res.ok) {
-                console.error('Erro na resposta da API:', res.status, res.statusText);
-                throw new Error('Falha ao carregar dados protegidos.');
-            }
-
-            const data = await res.json();
-            console.log('Dados recebidos da API:', data);
-
-            const container = document.getElementById('dataProtected');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.textContent = 'Nenhum dado encontrado.';
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.style.borderCollapse = 'collapse';
-            table.style.width = '100%';
-            table.style.marginTop = '20px';
-
-            const styleCell = (cell) => {
-                cell.style.border = '1px solid black';
-                cell.style.padding = '8px';
-                cell.style.textAlign = 'left';
-            };
-
-            const headerRow = document.createElement('tr');
-            Object.keys(data[0]).forEach(key => {
-                const th = document.createElement('th');
-                th.textContent = key;
-                styleCell(th);
-                th.style.backgroundColor = '#f2f2f2';
-                headerRow.appendChild(th);
-            });
-            table.appendChild(headerRow);
-
-            data.forEach(pessoa => {
-                const row = document.createElement('tr');
-                Object.values(pessoa).forEach(value => {
-                    const td = document.createElement('td');
-                    td.textContent = value;
-                    styleCell(td);
-                    row.appendChild(td);
-                });
-                table.appendChild(row);
-            });
-
-            container.appendChild(table);
-        } catch (error) {
-            console.error('Erro ao carregar dados protegidos:', error);
-            const container = document.getElementById('dataProtected');
-            container.innerHTML = '<p>Erro ao carregar os dados. Tente novamente mais tarde.</p>';
-        }
-    }
-
-    function verificarOutros() {
+    function validateGender() {
         const radios = document.getElementsByName("sexo");
-        const inputOutros = document.getElementById('outroSexos');
+        const inputOthers = document.getElementById('outroSexos');
         let selecionado = "";
         for (let i = 0; i < radios.length; i++) {
             if (radios[i].checked) {
@@ -284,91 +161,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (selecionado === "outroSexo") {
-            inputOutros.disabled = false;
-            inputOutros.focus();
+            inputOthers.disabled = false;
+            inputOthers.focus();
         } else {
-            inputOutros.disabled = true;
-            inputOutros.value = "";
+            inputOthers.disabled = true;
+            inputOthers.value = "";
         }
-        inputOutros.addEventListener('input', () => {
-        inputOutros.value = inputOutros.value.replace(/[0-9]/g, '');
+        inputOthers.addEventListener('input', () => {
+        inputOthers.value = inputOthers.value.replace(/[0-9]/g, '');
     });
         document.querySelectorAll('input[name="sexo"]').forEach((radio) => {
-        radio.addEventListener('change', verificarOutros);
+        radio.addEventListener('change', validateGender);
     });
     };
 
-    function verificarEsgoto() {
-        const esgoto = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
-        const naoTemEsgoto = document.getElementById('opcoes');
-        naoTemEsgoto.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
+    function validateSewage() {
+        const sewage = document.querySelector('input[name="temEsgotoAi"]:checked')?.value;
+        const notSewage = document.getElementById('opcoes');
+        notSewage.innerHTML = '<option value="" disabled selected>Selecione uma opção</option>';
 
-        if (esgoto === 'Sim') {
+        if (sewage === 'Sim') {
             const option = document.createElement('option');
             option.value = 'NoSistemaDeEsgoto';
             option.text = 'No Sistema de esgoto';
-            naoTemEsgoto.appendChild(option);
-        } else if (esgoto === 'Nao') {
-            const opcaoNao = [
+            notSewage.appendChild(option);
+        } else if (sewage === 'Nao') {
+            const optionNot = [
                 { value: 'NoMar', text:'No Mar'},
                 { value: 'CeuAberto', text:'Ceu Aberto'},
                 { value: 'NoMangue', text: 'No Mangue'}
             ];
-            opcaoNao.forEach((opt) => {
+            optionNot.forEach((opt) => {
                 const option = document.createElement('option');
                 option.value = opt.value;
                 option.text = opt.text;
-                naoTemEsgoto.appendChild(option);
+                notSewage.appendChild(option);
             })
         }
         document.querySelectorAll('input[name="temEsgotoAi"]').forEach((radio) => {
-        radio.addEventListener('change', verificarEsgoto); 
+        radio.addEventListener('change', validateSewage); 
     });
     };
-
-    function formatarCelular() {
-        console.log("A FUNÇÃO FORMATAR CELULAR FOI CARREGADA COM SUCESSO!");
-        const inputTelefone = document.querySelector('input[name="telefone"]');
-        if (!inputTelefone) {
-            console.log("ERRO: O JavaScript não encontrou o campo de telefone na página!");
-            return;
-        }
-        inputTelefone.addEventListener('keydown', (e) => {
-            const teclasPermitidas = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-            if (teclasPermitidas.includes(e.key) || (e.ctrlKey === true || e.metaKey === true)) {
-                return;
-            }
-            if (!/[0-9]/.test(e.key)) {
-                e.preventDefault();
-            }
-        });
-        inputTelefone.addEventListener('input', (e) => {
-            let valor = e.target.value;
-            valor = valor.replace(/\D/g, '');
-            if (valor.length > 11) {
-                valor = valor.slice(0, 11);
-            }
-            if (valor.length > 7) {
-                valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-            } else if (valor.length > 2) {
-                valor = valor.replace(/^(\d{2})(\d+)/, '($1) $2');
-            } else if (valor.length > 0) {
-                valor = valor.replace(/^(\d+)/, '($1');
-            }
-        
-        e.target.value = valor;
-        });
-    }
-    formatarCelular();
-
-    async function checkLogin() {
-        const res = await fetch('/check-login');
-        const data = await res.json();
-        if (data.logado){
-            document.getElementById('area-restrita').style.display = 'block';
-        }
-    };
-
-    checkLogin();
-
 });

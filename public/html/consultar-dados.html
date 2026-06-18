@@ -26,7 +26,7 @@
     <div class="container-consulta">
 
         <section id="consulta">
-            <label for="filtro">Escolha o filtro:</label>
+            <label for="filtro">Selecione o filtro:</label>
             <select id="filtro">
                 <option value="todos">Todos</option>
                 <option value="bairro">Bairro</option>
@@ -34,18 +34,11 @@
             </select>
         
             <button id="mostrarGraficoButton">Mostrar Grafico</button>
-            <button id="showDetail">Mostrar Detalhes</button>
 
-            <canvas id="myChart" width="50%" height="50%"></canvas>
+            <div class="canvas">
+                <canvas id="myChart"></canvas>
+            </div>
         </section>
-
-        <div id="screen-login" style="display: none;">
-            <h3>Login necessário</h3>
-            <input type="text" id="user" placeholder="Usuário">
-            <input type="password" id="password" placeholder="Senha">
-            <button id="btt-login">Entrar</button>
-            <p id="msg-error" style="color: red;"></p>
-        </div>
 
         <div id="detail" style="display: none;">
             <div id="dataProtected">
