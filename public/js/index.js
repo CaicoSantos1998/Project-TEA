@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const urlBase = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
-                ? 'http://localhost:3000/percentage' : '/percentage';
+                ? 'http://localhost:3000' : '';
             const response = await fetch(`${urlBase}/percentage?filter=${encodeURIComponent(filter)}`, {
                 method: 'GET',
                 cache: 'no-store'
