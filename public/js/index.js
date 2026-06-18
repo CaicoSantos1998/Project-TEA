@@ -46,22 +46,31 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateGraphic(filter) {
         const canvas = document.getElementById('myChart');
         if (!canvas) return;
-
+        
         try {
-            const response = await fetch(`https://project-tea.onrender.com/percentage?filter=${encodeURIComponent(filter)}`);
+            const urlBase = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+                ? 'http://localhost:3000' : 'https://onrender.com';
+            const response = await fetch(`${urlBase}/percentage?filter=${encodeURIComponent(filter)}`, {
+                method: 'GET',
+                cache: 'no-store'
+            });
             const data = await response.json();
+            console.log("Dados brutos recebidos para o gráfico:", data);
             let labels = [];
             let datasets = [];
 
             if (filter === 'todos') {
-                let totalSim = 0;
-                let totalNao = 0;
+                let totalYes = 0;
+                let totalNot = 0;
                 data.forEach(item => {
-                    const valor = item.percentage ? parseFloat(item.percentage) : 0;
-                    if (item.temEsgotoAi === 'Sim') {
-                        totalSim += valor;
-                    } else if (item.temEsgotoAi === 'Nao' || item.temEsgotoAi === 'Não') {
-                        totalNao += valor;
+                    const value = item.percentage ? Number(parseFloat(item.percentage).toFixed(2)) : 0;
+                    const responseSewage = item.temEsgotoAi 
+                        ? item.temEsgotoAi.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() 
+                        : '';
+                    if (responseSewage === 'sim') {
+                        totalYes += value;
+                    } else if (responseSewage === 'nao' || item.temEsgotoAi === 'não') {
+                        totalNot += value;
                     }
                 });
 
@@ -69,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets = [
                     {
                         label: '% Sim',
-                        data: [totalSim, 0],
+                        data: [totalYes, 0],
                         backgroundColor: '#006400'
                     },
                     {
                         label: '% Não',
-                        data: [0, totalNao],
+                        data: [0, totalNot],
                         backgroundColor: '#950606'
                     }
                 ];
@@ -105,9 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 ];
             }
-
-            const ctx = canvas.getContext('2d');
-            if (window.graphic) window.graphic.destroy();
+            const container = document.querySelector('.canvasGraph');
+            if (container) {
+                container.innerHTML = '<canvas id="myChart"></canvas>';
+            }
+            const newCanvas = document.getElementById('myChart');
+            const ctx = newCanvas.getContext('2d');
 
             window.graphic = new Chart(ctx, {
                 type: 'bar',

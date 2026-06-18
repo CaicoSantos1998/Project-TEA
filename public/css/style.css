@@ -121,16 +121,17 @@ form {
 
 /* ------------------ Consulta ------------------ */
 
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+.canvasGraph {
+  width: 100%;
+  max-width: 900px;
+  height: 600px;     
+  margin: 20px auto;
+  position: relative;
 }
 
-.canvas {
-  width: 100%;
-  max-width: 600px;
-  height: 350px;
-  margin: 20px auto;
+.canvasGraph canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 #login {

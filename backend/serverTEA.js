@@ -5,14 +5,12 @@ const cors = require('cors');
 const path = require('path');
 const { error } = require('console');
 
+
 const st = express();
 
 st.set('trust proxy', 1);
 
-st.use(cors({
-    origin: 'https://project-tea.onrender.com',
-    credentials: true
-}));
+st.use(cors({ origin: true, credentials: true }));
 
 st.use(express.json());
 
