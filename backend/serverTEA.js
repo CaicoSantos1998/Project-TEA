@@ -14,6 +14,10 @@ st.use(cors({
     credentials: true
 }));
 
+st.use(express.json());
+
+st.use(express.urlencoded({ extended: true }));
+
 const db = mysql.createPool({
 	host: process.env.DB_HOST,
     port: process.env.DB_PORT,
