@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,46 +8,40 @@
 
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-
-    <div id="header">
-        <div id="title">
-            <h1>TEA - Tem Esgoto Aí?</h1>
-        </div>
-
-        <div id="menu">
-            <a class="page1" href="/">Formulario</a>
-            <a class="page2" href="/consultar-dados">Consulta</a>
-            <a class="page3" href="/sobre-projeto">Sobre</a>
-        </div>
-    </div>
-
-    <div class="container-consulta">
-
-        <section id="consulta">
-            <label for="filtro">Selecione o filtro:</label>
-            <select id="filtro">
-                <option value="todos">Todos</option>
-                <option value="bairro">Bairro</option>
-                <option value="rua">Rua</option>
-            </select>
-        
-            <button id="mostrarGraficoButton">Mostrar Grafico</button>
-
-            <div class="canvasGraph">
-                <canvas id="myChart"></canvas>
-            </div>
-        </section>
-
-    </div>
-
+    <header>
+        <h1 class="main-title">TEA - Tem Esgoto Aí?</h1>
+        <nav id="menu">
+            <a href="/">Formulario</a>
+            <a href="/consultar-dados">Consulta</a>
+            <a href="/sobre-projeto">Sobre</a>
+        </nav>
+    </header>
+    <main>
+        <article class="container-consulta">
+                <section id="consulta">
+                    <label for="filtro">Selecione o filtro:</label>
+                    <select id="filtro">
+                        <option value="todos">Todos</option>
+                        <option value="bairro">Bairro</option>
+                        <option value="rua">Rua</option>
+                    </select>
+                    <button id="mostrarGraficoButton">Mostrar Grafico</button>
+                    <div class="canvasGraph">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </section>
+        </article>
+    </main>
     <footer>
         <h1>Todos os direitos reservados - 2026</h1>
     </footer>
 
     <script src="../js/index.js"></script>
-    
+
 </body>
+
 </html>
