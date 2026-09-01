@@ -135,6 +135,20 @@ header a:hover {
   border-radius: 5px;
   padding: 20px;
   flex: 1;
+  min-width: 400px;
+  max-width: 600px;
+  background-color: var(--color0);
+  margin: auto;
+  padding: 20px;
+  color: var(--color6);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 2px 2px 5px var(--color6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0px;
+  padding: 30px;
 }
 
 .canvasGraph {
