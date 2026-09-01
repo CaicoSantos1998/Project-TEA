@@ -62,7 +62,7 @@ header a:hover {
 /* ------------------ Container/Formulário ------------------ */
 
 .container {
-  min-width: 400px;
+  width: 100%;
   max-width: 600px;
   background-color: var(--color0);
   margin: auto;
@@ -116,13 +116,18 @@ header a:hover {
 #container-sobre {
   flex: 1;
   text-align: center;
+  justify-content: center;
   padding: 100px;
+  padding: 40px 20px;
+  text-align: center;
 }
 
 .texto {
-  margin: 150px 0px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0px;
   font-size: 1.5em;
-  padding: 60px;
+  padding: 40px;
 }
 
 /* ------------------ Consulta ------------------ */
@@ -135,11 +140,12 @@ header a:hover {
   border-radius: 5px;
   padding: 20px;
   flex: 1;
+  width: 100%;
   min-width: 400px;
   max-width: 600px;
   background-color: var(--color0);
-  margin: auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 30px;
   color: var(--color6);
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -147,8 +153,6 @@ header a:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 0px;
-  padding: 30px;
 }
 
 .canvasGraph {
@@ -179,55 +183,68 @@ footer {
 
 @media (max-width: 768px) {
 
+  header {
+    padding: 15px 10px;
+  }
+
   header a:link,
   header a:visited {
-    color: var(--color6);
-    background: var(--color0);
-    padding: 5px 20px;
+    padding: 8px 12px;
+  }
+
+  .main-title {
+    font-size: 2em;
   }
 
   .container {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    min-height: 80vh !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 25px 18px;
+    box-sizing: border-box;
   }
 
-  #email {
-    width: 60%;
-  }
-
-  #field-telefone {
-    width: 50%;
+  #nome,
+  #email,
+  #field-telefone,
+  #nbI {
+    width: 100%;
   }
 
   #btn-enviar {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
+    padding: 12px;
     float: none;
+    box-sizing: border-box;
+  }
+
+  .field,
+  .field-name {
+    margin-bottom: 20px;
   }
 
   #container-sobre {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    min-height: 80vh !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-sizing: border-box !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 0vh;
+
+    padding: 30px 20px;
   }
 
   .texto {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    text-align: center !important;
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+    padding: 10px;
+
+    font-size: 1.1em;
+    text-align: center;
   }
 
   .texto p {
@@ -236,7 +253,20 @@ footer {
     margin-bottom: 15px;
   }
 
+  .container-consulta {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .canvasGraph {
+    width: 100%;
+    height: 400px;
+  }
+
   footer {
     font-size: 8px;
+    padding: 15px;
   }
 }
